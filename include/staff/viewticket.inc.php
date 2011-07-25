@@ -285,6 +285,7 @@ if(($resp=db_query($sql)) && ($notes=db_num_rows($resp))){
                         <input type="hidden" name="ticket_id" value="<?=$id?>">
                         <input type="hidden" name="msg_id" value="<?=$msgid?>">
                         <input type="hidden" name="a" value="reply">
+                        Send to: <input type="text" name="send_to" value="<?=$ticket->getEmail()?>">
                         <div><font class="error">&nbsp;<?=$errors['response']?></font></div>
                         <div>
                            <?

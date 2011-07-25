@@ -725,6 +725,7 @@ class Ticket{
         if(!$thisuser || !$thisuser->getId() || !$thisuser->isStaff()) //just incase
             return 0;
 
+        $send_to = $_POST['send_to'];
     
         $sql= 'INSERT INTO '.TICKET_RESPONSE_TABLE.' SET created=NOW() '.
                 ',ticket_id='.db_input($this->getId()).
@@ -751,6 +752,7 @@ class Ticket{
             if(($resp=db_query($sql)) && db_num_rows($resp) && list($subj,$body)=db_fetch_row($resp)){
 
                 $body=$this->replaceTemplateVars($body);
+                $body = str_replace("$SENT",'',$body);
                 $subj=$this->replaceTemplateVars($subj);
                 $body = str_replace('%response',$response,$body);
                 //$body = str_replace('%message',$response,$body); //Previously used!
@@ -783,7 +785,13 @@ class Ticket{
                     $email =$cfg->getDefaultEmail();
 
                 if($email && $email->getId()) {
-                    $email->send($this->getEmail(),$subj,$body,$file);
+                    // Just in case they wiped out the send address we still
+                    // need to make sure it gets somewhere.
+                    if($_POST['send_to']){
+                        $email->send($_POST['send_to'],$subj,$body,$file);
+                    } else {
+                        $email->send($this->getEmail(),$subj,$body,$file);
+                    }
                 }
             }else{
                 //We have a big problem...alert admin...

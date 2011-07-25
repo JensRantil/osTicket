@@ -120,13 +120,16 @@ class MailFetcher {
     
     //Generic decoder - mirrors imap_utf8
     function mime_decode($text) {
-        
-        $a = imap_mime_header_decode($text);
-        $str = '';
-        foreach ($a as $k => $part)
-            $str.= $part->text;
-        
-        return $str?$str:imap_utf8($text);
+        $newString = '';
+        $charset = "UTF-8";
+        $elements=imap_mime_header_decode($text);
+        for($i=0;$i<count($elements);$i++)
+        {
+            if ($elements[$i]->charset == 'default')
+                $elements[$i]->charset = 'iso-8859-1';
+            $newString .= iconv($elements[$i]->charset, $charset, $elements[$i]->text);
+        }
+        return $newString;
     }
 
     function getLastError(){
