@@ -81,8 +81,10 @@ if($_POST && !$errors):
             if(!$errors && BanList::isbanned($ticket->getEmail()))
                 $errors['err']='Email is in banlist. Must be removed to reply';
 
+            $cc = strip_tags($_POST['carbon_copy']);
+            $bcc = strip_tags($_POST['blind_carbon_copy']);
             //If no error...do the do.
-            if(!$errors && ($respId=$ticket->postResponse($_POST['msg_id'],$_POST['response'],$_POST['signature'],$_FILES['attachment']))){
+            if(!$errors && ($respId=$ticket->postResponse($_POST['msg_id'],$_POST['response'],$_POST['signature'],$_FILES['attachment'],true,$cc,$bcc))){
                 $msg='Response Posted Successfully';
                 //Set status if any.
                 $wasOpen=$ticket->isOpen();

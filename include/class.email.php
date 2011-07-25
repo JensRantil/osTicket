@@ -132,7 +132,7 @@ class Email {
 
 
 
-    function send($to,$subject,$message,$attachment=null) {
+    function send($to,$subject,$message,$attachment=null,$cc=null,$bcc=null) {
         global $cfg;
 
         //Get SMTP info IF enabled!
@@ -166,6 +166,17 @@ class Email {
                           'X-Mailer' =>'osTicket v 1.6',
                           'Content-Type' => 'text/html; charset="UTF-8"'
                           );
+
+        // The following CC/BCC code is only valid for SMTP backend of PEAR::Mail
+        // See http://raamdev.com/adding-cc-recipients-with-pear-mail for details.
+        if ($cc) {
+            $to .= ', '.$cc;
+            $headers['Cc'] = $cc;
+        }
+        if ($bcc) {
+            $to .= ', '.$bcc;
+        }
+
         $mime = new Mail_mime();
         $mime->setTXTBody($body);
         //attachment TODO: allow multiple attachments - $attachment should be mixed parts.

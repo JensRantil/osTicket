@@ -339,6 +339,12 @@ if(($resp=db_query($sql)) && ($notes=db_num_rows($resp))){
                             <label><input type="checkbox" name="ticket_status" id="l_ticket_status" value="Reopen" <?=$checked?> > Reopen on Reply</label>
                             <?}?>
                         </div>
+                        <div>
+                            <label for="carbon_copy"><b>Cc:</b></label>
+                            <input type="text" name="carbon_copy" value="<?=$cc?>" />
+                            <label for="blind_carbon_copy"><b>Bcc:</b></label>
+                            <input type="text" name="blind_carbon_copy" value="<?=$bcc?>" />
+                        </div>
                         <p>
                             <div  style="margin-left: 50px; margin-top: 30px; margin-bottom: 10px;border: 0px;">
                                 <input class="button" type='submit' value='Post Reply' />

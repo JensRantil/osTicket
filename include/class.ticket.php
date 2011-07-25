@@ -719,7 +719,7 @@ class Ticket{
     }
 
     //Insert Staff Reply
-    function postResponse($msgid,$response,$signature='none',$attachment=false,$canalert=true){
+    function postResponse($msgid,$response,$signature='none',$attachment=false,$canalert=true,$cc=null,$bcc=null){
         global $thisuser,$cfg;
 
         if(!$thisuser || !$thisuser->getId() || !$thisuser->isStaff()) //just incase
@@ -771,7 +771,7 @@ class Ticket{
                 break;
                 endswitch;
                 $body = str_replace("%signature",$signature,$body);
-                
+
                 //Email attachment when attached AND if emailed attachments are allowed!
                 $file=null;
                 if(($attachment && is_file($attachment['tmp_name'])) && $cfg->emailAttachments()) {
@@ -788,9 +788,9 @@ class Ticket{
                     // Just in case they wiped out the send address we still
                     // need to make sure it gets somewhere.
                     if($_POST['send_to']){
-                        $email->send($_POST['send_to'],$subj,$body,$file);
+                        $email->send($_POST['send_to'],$subj,$body,$file,$cc,$bcc);
                     } else {
-                        $email->send($this->getEmail(),$subj,$body,$file);
+                        $email->send($this->getEmail(),$subj,$body,$file,$cc,$bcc);
                     }
                 }
             }else{
