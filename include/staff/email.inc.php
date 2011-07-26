@@ -186,7 +186,7 @@ $priorities= db_query('SELECT priority_id,priority_desc FROM '.TICKET_PRIORITY_T
             </td>
         </tr>
         <tr><th>Encryption</th>
-            <td>Best available authentication method is auto-selected based on what the sever supports.</td>
+            <td>Best available authentication method is auto-selected based on what the server supports.</td>
         </tr>
     </table>
    </td></tr>
