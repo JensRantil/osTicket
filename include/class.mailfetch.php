@@ -149,9 +149,31 @@ class MailFetcher {
         $headerinfo=imap_headerinfo($this->mbox,$mid);
         $sender=$headerinfo->from[0];
 
+        $tos = array();
+        foreach($headerinfo->to as $recipient) {
+            if ($recipient->personal == ($recipient->mailbox.'@'.$recipient->host)) {
+                $tos[] = $recipient->mailbox.'@'.$recipient->host;
+            } else {
+                $tos[] = $recipient->personal.' <'.$recipient->mailbox.'@'.$recipient->host.'>';
+            }
+        }
+        $tos = implode(', ', $tos);
+        $ccs = array();
+        foreach($headerinfo->cc as $ccrecipient) {
+            if ($ccrecipient->personal == ($ccrecipient->mailbox.'@'.$ccrecipient->host)) {
+                $ccs[] = $ccrecipient->mailbox.'@'.$ccrecipient->host;
+            } else {
+                $ccs[] = $ccrecipient->personal.' <'.$ccrecipient->mailbox.'@'.$ccrecipient->host.'>';
+            }
+        }
+        $ccs = implode(', ', $ccs);
+
         //Parse what we need...
         $header=array(
-                      'from'   =>array('name'  =>@$sender->personal,'email' =>strtolower($sender->mailbox).'@'.$sender->host),
+                      'from'   =>array('name'  =>@$sender->personal,
+                      'email' =>strtolower($sender->mailbox).'@'.$sender->host),
+                      'to' =>$tos,
+                      'cc' =>$ccs,
                       'subject'=>@$headerinfo->subject,
                       'mid'    =>$headerinfo->message_id);
         return $header;
@@ -229,6 +251,8 @@ class MailFetcher {
 
         $var['name']=$this->mime_decode($mailinfo['from']['name']);
         $var['email']=$mailinfo['from']['email'];
+        $var['cc']=$mailinfo['cc'];
+        $var['to']=$mailinfo['to'];
         $var['subject']=$mailinfo['subject']?$this->mime_decode($mailinfo['subject']):'[No Subject]';
         $var['message']=Format::stripEmptyLines($this->getBody($mid));
         $var['header']=$this->getHeader($mid);

@@ -27,6 +27,8 @@ class Ticket{
     var $id;
     var $extid;
     var $email;
+    var $to;
+    var $cc;
     var $status;
     var $created;
     var $updated;
@@ -70,6 +72,8 @@ class Ticket{
             $this->id       =$row['ticket_id'];
             $this->extid    =$row['ticketID'];
             $this->email    =$row['email'];
+            $this->to       =$row['destination'];
+            $this->cc       =$row['cc'];
             $this->fullname =$row['name'];
             $this->status   =$row['status'];
             $this->created  =$row['created'];
@@ -132,6 +136,14 @@ class Ticket{
    
     function getEmail(){
         return $this->email;
+    }
+
+    function getTo(){
+        return $this->to;
+    }
+
+    function getCC(){
+        return $this->cc;
     }
 
     function getName(){
@@ -1128,6 +1140,7 @@ class Ticket{
 
  
          if(!$errors){
+             // TODO: Update CC and BCC here
              $sql='UPDATE '.TICKET_TABLE.' SET updated=NOW() '.
                   ',email='.db_input($var['email']).
                   ',name='.db_input(Format::striptags($var['name'])).
@@ -1265,6 +1278,17 @@ class Ticket{
             }
         }
 
+        if($var['to']) {
+            $to = $var['to'];
+        } else {
+            $to = "";
+        }
+        if($var['cc']) {
+            $cc = $var['cc'];
+        } else {
+            $cc = "";
+        }
+
         //Any error above is fatal.
         if($errors) { return 0; }
         
@@ -1311,12 +1335,15 @@ class Ticket{
         
         //We are ready son...hold on to the rails.
         $extId=Ticket::genExtRandID();
+        // TODO: Update CC and BCC here
         $sql=   'INSERT INTO '.TICKET_TABLE.' SET created=NOW() '.
                 ',ticketID='.db_input($extId).
                 ',dept_id='.db_input($deptId).
                 ',topic_id='.db_input($topicId).
                 ',priority_id='.db_input($priorityId).
                 ',email='.db_input($var['email']).
+                ',destination='.db_input($to).
+                ',cc='.db_input($cc).
                 ',name='.db_input(Format::striptags($var['name'])).
                 ',subject='.db_input(Format::striptags($var['subject'])).
                 ',helptopic='.db_input(Format::striptags($topicDesc)).

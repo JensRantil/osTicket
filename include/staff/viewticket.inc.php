@@ -64,7 +64,7 @@ if($ticket->isOverdue())
                 <td><?=Format::htmlchars($ticket->getName())?></td>
             </tr>
             <tr>
-                <th>Email:</th>
+                <th>From:</th>
                 <td><?php 
                     echo $ticket->getEmail();
                     if(($related=$ticket->getRelatedTicketsCount())) {
@@ -81,6 +81,14 @@ if($ticket->isOverdue())
             <tr>
                 <th>Source:</th>
                 <td><?=$ticket->getSource()?></td>
+            </tr>
+            <tr>
+                <th>To:</th>
+                <td><?=str_replace(", ", "<br/>", htmlspecialchars($ticket->getTo()))?></td>
+            </tr>
+            <tr>
+                <th>CC:</th>
+                <td><?=str_replace(", ", "<br/>", htmlspecialchars($ticket->getCC()))?></td>
             </tr>
         </table>
      </td>
