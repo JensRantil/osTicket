@@ -336,6 +336,8 @@ CREATE TABLE `%TABLE_PREFIX%ticket` (
   `topic_id` int(10) unsigned NOT NULL default '0',
   `staff_id` int(10) unsigned NOT NULL default '0',
   `email` varchar(120) NOT NULL default '',
+  `destination` varchar(255) NOT NULL default '',
+  `cc` varchar(255) NOT NULL default '',
   `name` varchar(32) NOT NULL default '',
   `subject` varchar(64) NOT NULL default '[no subject]',
   `helptopic` varchar(255) default NULL,
