@@ -284,7 +284,7 @@ class MailFetcher {
             //Strip quoted reply...TODO: figure out how mail clients do it without special tag..
             if($cfg->stripQuotedReply() && ($tag=$cfg->getReplySeparator()) && strpos($var['message'],$tag))
                 list($message)=split($tag,$var['message']);
-            $msgid=$ticket->postMessage($message,'Email',$var['mid'],$var['header']);
+            $msgid=$ticket->postMessage($message,'Email',$var['mid'],$var['header'],false,$var['to'],$var['cc']);
         }
         //Save attachments if any.
         if($msgid && $cfg->allowEmailAttachments()){

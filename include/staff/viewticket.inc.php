@@ -237,7 +237,7 @@ if(($resp=db_query($sql)) && ($notes=db_num_rows($resp))){
     <div id="ticketthread">
 	<?
 	    //get messages
-        $sql='SELECT msg.msg_id,msg.created,msg.message,count(attach_id) as attachments  FROM '.TICKET_MESSAGE_TABLE.' msg '.
+        $sql='SELECT msg.msg_id,msg.created,msg.message,msg.cc,msg.destination,count(attach_id) as attachments  FROM '.TICKET_MESSAGE_TABLE.' msg '.
             ' LEFT JOIN '.TICKET_ATTACHMENT_TABLE." attach ON  msg.ticket_id=attach.ticket_id AND msg.msg_id=attach.ref_id AND ref_type='M' ".
             ' WHERE  msg.ticket_id='.db_input($id).
             ' GROUP BY msg.msg_id ORDER BY created';
@@ -245,11 +245,21 @@ if(($resp=db_query($sql)) && ($notes=db_num_rows($resp))){
 	    while ($msg_row = db_fetch_array($msgres)) {
 		    ?>
 		    <table align="center" class="message" cellspacing="0" cellpadding="1" width="100%" border=0>
-		        <tr><th><?=Format::db_daydatetime($msg_row['created'])?></th></tr>
-                <?if($msg_row['attachments']>0){ ?>
-                <tr class="header"><td><?=$ticket->getAttachmentStr($msg_row['msg_id'],'M')?></td></tr> 
+		        <tr><th colspan="2"><?=Format::db_daydatetime($msg_row['created'])?></th></tr>
+                <?
+                // This if statement is here to make this patch backward compatible.
+                // You can remove the statement if you are making a fresh install.
+                if(trim($msg_row['cc'])!='' || trim($msg_row['bcc'])!='') {
+                ?>
+                        <tr>
+                            <td width="50%"><strong>To:</strong> <?=htmlentities($msg_row['destination'])?></td>
+                            <td><strong>CC:</strong> <?=trim($msg_row['cc'])==''?'<i>None</i>':htmlentities($msg_row['cc'])?></td>
+                        </tr>
                 <?}?>
-                <tr><td><?=Format::display($msg_row['message'])?>&nbsp;</td></tr>
+                <?if($msg_row['attachments']>0){ ?>
+                <tr class="header"><td colspan="2"><?=$ticket->getAttachmentStr($msg_row['msg_id'],'M')?></td></tr> 
+                <?}?>
+                <tr><td colspan="2"><?=Format::display($msg_row['message'])?>&nbsp;</td></tr>
 		    </table>
             <?
             //get answers for messages

@@ -604,7 +604,7 @@ class Ticket{
     }
 
     //Insert message from client
-    function postMessage($msg,$source='',$msgid=NULL,$headers='',$newticket=false){
+    function postMessage($msg,$source='',$msgid=NULL,$headers='',$newticket=false,$to='',$cc=''){
         global $cfg;
        
         if(!$this->getId())
@@ -619,7 +619,9 @@ class Ticket{
              ',message='.db_input(Format::striptags($msg)). //Tags/code stripped...meaning client can not send in code..etc
              ',headers='.db_input($headers). //Raw header.
              ',source='.db_input($source).
-             ',ip_address='.db_input($_SERVER['REMOTE_ADDR']);
+             ',ip_address='.db_input($_SERVER['REMOTE_ADDR']).
+             ',cc='.db_input($cc).
+             ',destination='.db_input($to);
     
         if(db_query($sql) && ($msgid=db_insert_id())) {
             $this->setLastMsgId($msgid);
