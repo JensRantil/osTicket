@@ -411,6 +411,8 @@ CREATE TABLE `%TABLE_PREFIX%ticket_message` (
   `ip_address` varchar(16) default NULL,
   `created` datetime NOT NULL default '0000-00-00 00:00:00',
   `updated` datetime default NULL,
+  `destination` varchar(255) NOT NULL default '',
+  `cc` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`msg_id`),
   KEY `ticket_id` (`ticket_id`),
   KEY `msgId` (`messageId`),
