@@ -240,7 +240,7 @@ if(($resp=db_query($sql)) && ($notes=db_num_rows($resp))){
         $sql='SELECT msg.msg_id,msg.created,msg.message,count(attach_id) as attachments  FROM '.TICKET_MESSAGE_TABLE.' msg '.
             ' LEFT JOIN '.TICKET_ATTACHMENT_TABLE." attach ON  msg.ticket_id=attach.ticket_id AND msg.msg_id=attach.ref_id AND ref_type='M' ".
             ' WHERE  msg.ticket_id='.db_input($id).
-            ' GROUP BY msg.msg_id ORDER BY created'; 
+            ' GROUP BY msg.msg_id ORDER BY created';
 	    $msgres =db_query($sql);
 	    while ($msg_row = db_fetch_array($msgres)) {
 		    ?>
